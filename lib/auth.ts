@@ -86,6 +86,7 @@ class AuthService {
         withCredentials: true,
       }
     );
+
     this.clearAccessToken();
   }
 
