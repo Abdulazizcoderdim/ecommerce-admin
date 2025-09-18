@@ -109,7 +109,7 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label htmlFor="title">Product Title</Label>
+              <Label htmlFor="title">Mahsulot Nomi</Label>
               <Input
                 id="title"
                 name="title"
@@ -150,7 +150,7 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="space-y-2">
-              <Label htmlFor="price">Price ($)</Label>
+              <Label htmlFor="price">Narxi (UZS)</Label>
               <Input
                 id="price"
                 name="price"
@@ -163,7 +163,7 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="oldPrice">Old Price ($)</Label>
+              <Label htmlFor="oldPrice">Eski Narxi (UZS)</Label>
               <Input
                 id="oldPrice"
                 name="oldPrice"
@@ -282,7 +282,7 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
 
           {/* Images */}
           <div className="space-y-2">
-            <Label htmlFor="images">Product Images</Label>
+            <Label htmlFor="images">Mahsulot Rasmlari</Label>
             <Input
               id="images"
               name="images"
@@ -291,7 +291,7 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
               accept="image/*"
             />
             <p className="text-sm text-muted-foreground">
-              Select multiple images for the product
+              Mahsulot uchun bir nechta rasmni tanlang
             </p>
           </div>
 
