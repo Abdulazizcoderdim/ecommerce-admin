@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { formatPrice } from "@/hooks/formatPrice";
 import { API_BASE_URL, authService } from "@/lib/auth";
 import {
   AlertCircle,
@@ -72,7 +73,7 @@ export default function AdminDashboard() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 px-6">
         <StatsCard
           title="Total Revenue"
-          value={`$${stats?.totalRevenue?.toLocaleString() || "0"}`}
+          value={`${formatPrice(stats?.totalRevenue || 0)}`}
           description="Total sales revenue"
           icon={DollarSign}
           trend={{ value: 12.5, isPositive: true }}

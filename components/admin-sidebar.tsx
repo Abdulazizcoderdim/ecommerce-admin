@@ -16,6 +16,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const adminNavItems = [
   {
@@ -48,10 +49,19 @@ const adminNavItems = [
 export function AdminSidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const pathname = usePathname();
+  const [loading, setLoading] = useState(false);
   const { user, logout } = useAuth();
 
   const handleLogout = async () => {
-    await logout();
+    try {
+      setLoading(true);
+      await logout();
+    } catch (error) {
+      toast.error("Failed to logout");
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -124,6 +134,7 @@ export function AdminSidebar() {
         )}
         <Button
           variant="ghost"
+          disabled={loading}
           onClick={handleLogout}
           className={cn(
             "w-full justify-start text-sidebar-foreground hover:bg-destructive hover:text-destructive-foreground",

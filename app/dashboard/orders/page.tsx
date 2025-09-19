@@ -1,64 +1,82 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { DashboardHeader } from "@/components/dashboard-header"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { OrderStatusBadge } from "@/components/order-status-badge"
-import { OrderDetailsModal } from "@/components/order-details-modal"
-import { type Order, apiService } from "@/lib/api"
-import { Search, Eye } from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { DashboardHeader } from "@/components/dashboard-header";
+import { OrderDetailsModal } from "@/components/order-details-modal";
+import { OrderStatusBadge } from "@/components/order-status-badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { formatPrice } from "@/hooks/formatPrice";
+import { useToast } from "@/hooks/use-toast";
+import { type Order, apiService } from "@/lib/api";
+import { Eye, Search } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function OrdersPage() {
-  const [orders, setOrders] = useState<Order[]>([])
-  const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [statusFilter, setStatusFilter] = useState<string>("all")
-  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const { toast } = useToast()
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const { toast } = useToast();
 
   const fetchOrders = async (page = 1) => {
     try {
-      setLoading(true)
-      const response = await apiService.getOrders(page, 10)
-      setOrders(response.data)
-      setTotalPages(response.pagination.pages)
-      setCurrentPage(page)
+      setLoading(true);
+      const response = await apiService.getOrders(page, 10);
+      setOrders(response.data);
+      setTotalPages(response.pagination.pages);
+      setCurrentPage(page);
     } catch (error) {
       toast({
         title: "Error",
         description: "Failed to fetch orders",
         variant: "destructive",
-      })
+      });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchOrders()
-  }, [])
+    fetchOrders();
+  }, []);
 
   const filteredOrders = orders.filter((order) => {
     const matchesSearch =
       order._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       order.user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.user.email.toLowerCase().includes(searchTerm.toLowerCase())
+      order.user.email.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesStatus = statusFilter === "all" || order.status === statusFilter
+    const matchesStatus =
+      statusFilter === "all" || order.status === statusFilter;
 
-    return matchesSearch && matchesStatus
-  })
+    return matchesSearch && matchesStatus;
+  });
 
   return (
     <div className="space-y-6">
-      <DashboardHeader title="Orders" description="Manage customer orders and assignments" />
+      <DashboardHeader
+        title="Orders"
+        description="Manage customer orders and assignments"
+      />
 
       <div className="px-6">
         <Card>
@@ -108,21 +126,32 @@ export default function OrdersPage() {
                   <TableBody>
                     {filteredOrders.map((order) => (
                       <TableRow key={order._id}>
-                        <TableCell className="font-mono text-sm">#{order._id.slice(-6)}</TableCell>
+                        <TableCell className="font-mono text-sm">
+                          #{order._id.slice(-6)}
+                        </TableCell>
                         <TableCell>
                           <div>
                             <p className="font-medium">{order.user.username}</p>
-                            <p className="text-sm text-muted-foreground">{order.user.email}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {order.user.email}
+                            </p>
                           </div>
                         </TableCell>
                         <TableCell>
                           <span className="text-sm">
-                            {order.products.length} item{order.products.length !== 1 ? "s" : ""}
+                            {order.products.length} item
+                            {order.products.length !== 1 ? "s" : ""}
                           </span>
                         </TableCell>
                         <TableCell>
                           <span className="font-medium">
-                            ${order.totalAmount || order.products.reduce((sum, p) => sum + p.price * p.quantity, 0)}
+                            {formatPrice(
+                              order.totalAmount ||
+                                order.products.reduce(
+                                  (sum, p) => sum + p.price * p.quantity,
+                                  0
+                                )
+                            )}
                           </span>
                         </TableCell>
                         <TableCell>
@@ -130,16 +159,26 @@ export default function OrdersPage() {
                         </TableCell>
                         <TableCell>
                           {order.operator ? (
-                            <span className="text-sm">{order.operator.username}</span>
+                            <span className="text-sm">
+                              {order.operator.username}
+                            </span>
                           ) : (
-                            <span className="text-sm text-muted-foreground">Unassigned</span>
+                            <span className="text-sm text-muted-foreground">
+                              Unassigned
+                            </span>
                           )}
                         </TableCell>
                         <TableCell>
-                          <span className="text-sm">{new Date(order.createdAt).toLocaleDateString()}</span>
+                          <span className="text-sm">
+                            {new Date(order.createdAt).toLocaleDateString()}
+                          </span>
                         </TableCell>
                         <TableCell>
-                          <Button variant="ghost" size="sm" onClick={() => setSelectedOrderId(order._id)}>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setSelectedOrderId(order._id)}
+                          >
                             <Eye className="w-4 h-4 mr-2" />
                             View
                           </Button>
@@ -162,5 +201,5 @@ export default function OrdersPage() {
         isAdmin={true}
       />
     </div>
-  )
+  );
 }

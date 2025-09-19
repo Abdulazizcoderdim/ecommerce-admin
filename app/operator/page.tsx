@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { formatPrice } from "@/hooks/formatPrice";
 import { API_BASE_URL, authService } from "@/lib/auth";
 import { CheckCircle, Clock, Package, ShoppingCart } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -146,12 +147,13 @@ export default function OperatorDashboard() {
                         {order.status}
                       </Badge>
                       <span className="text-sm font-medium">
-                        $
-                        {order.totalAmount ||
-                          order.products.reduce(
-                            (sum, p) => sum + p.price * p.quantity,
-                            0
-                          )}
+                        {formatPrice(
+                          order.totalAmount ||
+                            order.products.reduce(
+                              (sum, p) => sum + p.price * p.quantity,
+                              0
+                            )
+                        )}
                       </span>
                     </div>
                   </div>

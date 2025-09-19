@@ -69,10 +69,18 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
       formData.set("freeDelivery", freeDelivery.toString());
       formData.set("returnDelivery", returnDelivery.toString());
 
+      for (const [key, value] of formData.entries()) {
+        if (value === "" || value === null) {
+          formData.delete(key);
+        }
+      }
+
       await onSubmit(formData);
     } catch (error) {
       console.error("Failed to submit form:", error);
-      toast.error("Failed to submit form");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to submit form"
+      );
     } finally {
       setLoading(false);
     }
@@ -168,7 +176,6 @@ export function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
                 id="oldPrice"
                 name="oldPrice"
                 type="number"
-                step="0.01"
                 defaultValue={product?.oldPrice}
                 placeholder="0.00"
               />

@@ -22,6 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { formatPrice } from "@/hooks/formatPrice";
 import { useToast } from "@/hooks/use-toast";
 import { type Product, apiService } from "@/lib/api";
 import { Edit, Plus, Search, Trash2 } from "lucide-react";
@@ -211,11 +212,11 @@ export default function ProductsPage() {
                         <TableCell>
                           <div>
                             <span className="font-medium">
-                              ${product.price}
+                              {formatPrice(product.price)}
                             </span>
                             {product.oldPrice && (
                               <span className="text-sm text-muted-foreground line-through ml-2">
-                                ${product.oldPrice}
+                                {formatPrice(product.oldPrice)}
                               </span>
                             )}
                           </div>

@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { formatPrice } from "@/hooks/formatPrice";
 import { useToast } from "@/hooks/use-toast";
 import { type Operator, type Order, apiService } from "@/lib/api";
 import { Calendar, DollarSign, Package, User } from "lucide-react";
@@ -227,7 +228,7 @@ export function OrderDetailsModal({
                       <div className="text-right">
                         <p className="font-medium">${product.price}</p>
                         <p className="text-sm text-muted-foreground">
-                          Total: ${product.price * product.quantity}
+                          Total: {formatPrice(product.price * product.quantity)}
                         </p>
                       </div>
                     </div>
